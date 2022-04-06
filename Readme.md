@@ -115,15 +115,57 @@ class Post(models.Model):
         return self.title
 ```
 
-## Shell de Django
+## Shell de Django (ORM)
 Ingresamos a la shell con
 ```
 pipenv run python manage.py shell
 ```
-El shell permite ejecutar python directamente dentro del servidor, por ejemplo para hacer consultas:
+El shell permite ejecutar python directamente dentro del servidor, e interactuar con la base de datos con métodos nativos.
+Por ejemplo para hacer consultas:
 ```python
 >>> from blog.models import Post
 >>> Post.objects.all()
 <QuerySet [<Post: Primer post>, <Post: Segundo Post>, <Post: Tercer Post>]>
 >>>
 ```
+[Ver Documentación](https://docs.djangoproject.com/en/4.0/topics/db/queries/)
+
+Ejemplo, crear una nueva entrada desde el shell:
+```python
+>>> nuevo_post = Post.objects.create(title="Cuarto Post", content="Post creado desde el shell de Django")
+```
+
+## Vistas / URL's
+Para agregar una vista a nuestra app, editamos su archivo views.py
+
+```python
+from django.shortcuts import render, HttpResponse
+
+def home(request):
+    return HttpResponse("Bienvenido a Django")
+```
+
+Y luego la enlazamos a la url deseada en urls.py
+
+```python
+from django.contrib import admin
+from django.urls import path
+from blog.views import home
+
+urlpatterns = [
+    path('', home),
+    path('admin/', admin.site.urls),
+]
+```
+
+## Templates HTML
+Dentro de la carpeta de la app, creamos la carpeta *templates/blog/home.html*
+<br><b>El nombre de la carpeta *template* se debe respetar ya que es el mismo que se utiliza internamente para todas las apps</b>
+<br>Luego cargamos el contenido HTML, para después renderizarla modificando views.py:
+```python
+from django.shortcuts import render, HttpResponse
+
+def home(request):
+    return render(request, "blog/home.html")
+```
+
