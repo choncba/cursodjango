@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Post
 
-# Register your models here.
+# Agrega el modelo de nuestra App al panel de administracion
+admin.site.register(Post)
+
