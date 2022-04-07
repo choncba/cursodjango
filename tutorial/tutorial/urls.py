@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from blog.views import home
+from blog.views import home, post
 
 urlpatterns = [
     path('', home),
+    path('post/<int:id>', post), # <int:id> es una variable que se puede usar en la url
     path('admin/', admin.site.urls),
 ]

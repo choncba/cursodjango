@@ -169,3 +169,99 @@ def home(request):
     return render(request, "blog/home.html")
 ```
 
+## Variables de contexto
+Ahora buscamos trasladar nuestra app de blog a la vista web, para hacerlo editamos *views.py*:
+
+```python
+from django.shortcuts import render, HttpResponse
+from .models import Post
+
+def home(request):
+    posts = Post.objects.all()                                  # Obtenemos todos los posts
+    return render(request, "blog/home.html", {'posts': posts})  # Enviamos los posts a la plantilla
+```
+
+Y después lo mostramos en el template html usando variables de Django y lógica Jinja2:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portada</title>
+</head>
+<body>
+    <h1>Bienvenido a Django</h1>
+    {% for post in posts %}
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.content }}</p>
+    {% endfor %}
+</body>
+</html>
+```
+
+## Páginas dinámicas
+Agregamos otra vista en *views.py*:
+
+```python
+def post(request, id):
+    post = Post.objects.get(id=id)
+    return render(request, "blog/post.html", {'post': post}) 
+```
+
+Y creamos la nueva plantilla post.html:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{post.title}}</title>
+</head>
+<body>
+    <h1>{{post.title}}</h1>
+    <p>{{post.content}}</p>
+</body>
+</html>
+```
+
+Por último, agregamos en *urls.py* el enlace dinámico para que pase el id a la vista:
+
+```python
+from django.contrib import admin
+from django.urls import path
+from blog.views import home, post
+
+urlpatterns = [
+    path('', home),
+    path('post/<int:id>', post), # <int:id> es una variable que se puede usar en la url
+    path('admin/', admin.site.urls),
+]
+```
+
+Ahora si vamos a http://127.0.0.1:8000/post/1 -> Nos muestra el primer post en el nuevo template
+<br>
+Para hacerlo dinámico, podemos ahora agregarlo como enlaces en la página home.html:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portada</title>
+</head>
+<body>
+    <h1>Bienvenido a Django</h1>
+    {% for post in posts %} 
+        <h2>{{ post.title }}</h2>
+        <p><a href="/post/{{ post.id }}">Ver...</a></p>
+    {% endfor %}
+</body>
+</html>
+```
+
+
