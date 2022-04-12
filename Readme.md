@@ -9,8 +9,9 @@ pip install pipenv
 Crea el entorno virtual e instala paquetes de Django, a su vez crea el archivo Pipfile, donde se listan las dependencias (reemplaza a requeriments.txt). El entorno virtual se crea en una carpeta aparte (/user/.virtualenvs), no junto con el proyecto
 pipenv install django
 
-<br>2 - Iniciar el proyecto en el entorno virtual:
+<br>2 - Instalar Django en el entorno virtual, e Iniciar el proyecto:
 ```
+pipenv install django
 pipenv run django-admin startproject NOMBRE-DEL-PROYECTO
 ```
 Esto crea automáticamente la estructura básica del proyecto en Django y valores por default:
